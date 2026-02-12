@@ -50,3 +50,107 @@ Backend --> Cache
 Backend --> Storage
 Backend --> Payment
 Backend --> Ws
+
+
+flowchart TB
+
+Controller[API Controllers]
+Service[Application Services]
+Domain[Domain Logic]
+Repository[Data Access Layer]
+Infra[Infrastructure Layer]
+
+Controller --> Service
+Service --> Domain
+Service --> Repository
+Service --> Infra
+Repository --> DB[(PostgreSQL)]
+Infra --> Cache[(Redis)]
+Infra --> Storage[(S3 / MinIO)]
+
+
+flowchart LR
+
+StudentWeb --> API
+StudentMobile --> API
+AdminWeb --> API
+
+API[Spring Boot REST API]
+
+
+flowchart TB
+
+Auth[Auth & Security]
+User[User & Role Management]
+Content[Blog & Learning Content]
+Quiz[Quiz & Assessment]
+Subscription[Subscription & Plans]
+PaymentModule[Payment & Billing]
+Notification[Notification]
+Reward[Rewards & Referrals]
+Media[Media Management]
+Reporting[Reporting & Analytics]
+
+Auth --> User
+User --> Content
+Content --> Quiz
+Subscription --> Content
+PaymentModule --> Subscription
+Notification --> User
+Reward --> User
+Media --> Content
+Reporting --> DB[(PostgreSQL)]
+
+
+sequenceDiagram
+
+participant Client as Web / Mobile App
+participant API as Auth API
+participant DB as PostgreSQL
+participant Cache as Redis
+
+Client->>API: Login request
+API->>DB: Validate credentials
+DB-->>API: User + roles
+API->>Cache: Store session / token metadata
+API-->>Client: Access token + Refresh token
+
+
+flowchart LR
+
+User --> Subscription
+Subscription --> Plan
+Plan --> Feature
+
+Feature --> APIAccess[API Access Rules]
+Feature --> ContentAccess[Content & Quiz Access]
+
+
+flowchart TB
+
+Admin --> Editor[Markdown Editor]
+Editor --> API
+API --> DB[(Content Metadata)]
+API --> Storage[(Images / Media)]
+StudentWeb --> API
+StudentMobile --> API
+
+
+sequenceDiagram
+
+participant Student
+participant Client
+participant QuizAPI
+participant DB
+
+Student->>Client: Start quiz
+Client->>QuizAPI: Load quiz
+QuizAPI->>DB: Load questions
+DB-->>QuizAPI: Questions
+QuizAPI-->>Client: Quiz data
+
+Student->>Client: Submit answers
+Client->>QuizAPI: Submit attempt
+QuizAPI->>DB: Save answers
+QuizAPI->>DB: Compute result
+QuizAPI-->>Client: Score and result
