@@ -28,36 +28,43 @@ The platform is optimized for:
 ## High-Level Architecture
 
 flowchart LR
-    subgraph Clients
-        A[Student Web App]
-        B[Student Android App]
-        C[Admin Web App]
-    end
-    
-    subgraph Gateway
-        D[Nginx / API Gateway]
-    end
-    
-    subgraph Backend
-        E[Spring Boot Application]
-    end
-    
-    subgraph Storage
-        F[(PostgreSQL)]
-        G[(Redis)]
-        H[(S3 / MinIO)]
-    end
-    
-    subgraph External
-        I[Razorpay]
-        J[WebSocket / Notification Channel]
-    end
-    
-    A & B & C --> D
-    D --> E
-    E --> F & G & H
-    E --> I
-    E --> J
+
+A[Student Web App]
+B[Student Android App]
+C[Admin Web App]
+
+subgraph Gateway
+    D[Nginx / API Gateway]
+end
+
+subgraph Backend
+    E[Spring Boot Application]
+end
+
+subgraph Storage
+    F[(PostgreSQL)]
+    G[(Redis)]
+    H[(S3 / MinIO)]
+end
+
+subgraph External
+    I[Razorpay Payment Gateway]
+    J[WebSocket / Notification Channel]
+end
+
+A --> D
+B --> D
+C --> D
+
+D --> E
+
+E --> F
+E --> G
+E --> H
+
+E --> I
+E --> J
+
 
 ---
 
